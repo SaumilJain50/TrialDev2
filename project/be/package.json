@@ -1,0 +1,18 @@
+{
+  "name": "be",
+  "version": "1.0.0",
+  "main": "jwt.js",
+  "scripts": {
+    "start": "nodemon jwt.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "nodemon": "^3.1.10"
+  }
+}

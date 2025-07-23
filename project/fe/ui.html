@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facebook Front Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="container-fluid p-4 text-primary">
+    <h1 class="text-center">Facebook</h1>
+
+    <!-- Signup Section -->
+    <div class="row my-5 align-items-center">
+      <div class="col-md-6 text-center">
+        <img src="facebook_logo.png" alt="Facebook Logo" class="img-fluid" width="300">
+      </div>
+      <div class="col-md-6">
+        <h2 class="text-danger mb-4">Signup</h2>
+        <div class = "mb-3">
+            <a href="#Login"> Existing User? Click here</a>
+        </div>
+        <form>
+          <div class="mb-3">
+            <label for="signupName" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="signupName" placeholder="Enter your name">
+          </div>
+          <div class="mb-3">
+            <label for="signupEmail" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email">
+          </div>
+          <div class="mb-3">
+            <label for="signupPassword" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="signupPassword" placeholder="Enter your password">
+          </div>
+          <button type="button" class="btn btn-primary" id="Signup" >Signup</button>
+          <div id="smessage">
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="row my-5 align-items-center">
+      <div class="col-md-6 text-center">
+        <img src="Facebook_other.jpg" alt="Facebook Other" class="img-fluid" width="800">
+      </div>
+      <div class="col-md-6">
+        <h2 class="text-success mb-4" id="Login">Login</h2>
+        <form>
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+          </div>
+          <button type="button" class="btn btn-danger" id = "login" >Login</button>
+          <div id="lmessage">
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+        Facebook © 2025. All rights reserved.
+    </footer>
+  <script>
+      let sname = document.querySelector("#signupName")
+      let semail = document.querySelector("#signupEmail")
+      let spassword = document.querySelector("#signupPassword")
+      let smessage = document.querySelector("#smessage")
+      let Signup = document.querySelector("#Signup")
+      let lemail = document.querySelector("#loginEmail")
+      let lpassword = document.querySelector("#loginPassword")
+      let lmessage = document.querySelector("#lmessage")
+
+
+      Signup.addEventListener("click" , (e)=>
+        {
+          let user = {name:sname.value , email:semail.value , password:spassword.value}
+            fetch("http://localhost:8000/user/signup" , 
+            {
+              method : "POST" ,
+              headers:{
+                "Content-Type" : "application/json"
+              } ,
+              body : JSON.stringify(user)
+             })
+              .then(response=>response.json())
+              .then(data =>{
+                smessage.innerHTML = data.message
+              })
+             
+              .catch(err=>
+              {
+                smessage.innerHTML = err
+              }
+              )
+
+        })
+      login.addEventListener("click" , (e)=>
+        {
+          let user = { email:lemail.value , password:lpassword.value}
+            fetch("http://localhost:8000/user/login" , 
+            {
+              
+              method : "POST" ,
+              headers:{
+                "Content-Type" : "application/json"
+              } ,
+              body : JSON.stringify(user)
+             })
+              .then(response=>response.json())
+              .then(data =>{
+                lmessage.innerHTML = `<div class = "container bg-primary text-white p-2" > ${data.message}</div>`
+                if(data.message == "Valid")
+              {
+                let luser =  {"token":data.token , "email":data.email}
+                let mytokens = []
+                if (localStorage.getItem("mytokens") == null)
+              {
+                mytokens = [luser]
+                localStorage.setItem("mytokens" , JSON.stringify(mytokens))
+               
+              }
+              else
+              {
+                mytokens = JSON.parse(localStorage.getItem("mytokens"))
+                mytokens.push(luser)
+                localStorage.setItem("mytokens" , JSON.stringify(mytokens))
+
+
+
+              }
+                localStorage.setItem("currentuser" , JSON.stringify(data.email))
+                location.href = "welcome.html"
+
+              }
+              })
+             
+              .catch(err=>
+              {
+                lmessage.innerHTML = err
+              }
+              )
+
+        })
+      
+
+
+
+
+  </script>
+
+
+</body>
+</html>
